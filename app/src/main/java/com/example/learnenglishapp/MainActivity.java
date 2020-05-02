@@ -1,10 +1,19 @@
 package com.example.learnenglishapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
+import com.example.learnenglishapp.db.WordListViewModel;
+import com.example.learnenglishapp.db.WordModel;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +22,9 @@ public class MainActivity extends AppCompatActivity {
 
     AdapterRecycler adapterRecycler;
     RecyclerView recyclerView;
-    List<DataModel> dataModels = new ArrayList<>();
+    List<WordModel> wordModels = new ArrayList<>();
+    FloatingActionButton floatingActionButton;
+    private WordListViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,15 +33,37 @@ public class MainActivity extends AppCompatActivity {
 
         initRecyclerView();
 
+
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+        viewModel = ViewModelProviders.of(this).get(WordListViewModel.class);
+
+        viewModel.getWordList().observe(MainActivity.this, new Observer<List<WordModel>>() {
+            @Override
+            public void onChanged(List<WordModel> wordModels) {
+                adapterRecycler.addItemList(wordModels);
+            }
+        });
+
     }
 
-    public void initRecyclerView(){
+    public void initRecyclerView() {
         recyclerView = findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapterRecycler = new AdapterRecycler(this,dataModels);
+        adapterRecycler = new AdapterRecycler(this, wordModels);
         recyclerView.setAdapter(adapterRecycler);
-
-
+//        wordModels.add(new WordModel("bLA BLA BLA ", "BLA BLA BLA"));
+//        wordModels.add(new WordModel("bLA BLA BLA ", "BLA BLA BLA"));
+//        wordModels.add(new WordModel("bLA BLA BLA ", "BLA BLA BLA"));
     }
+
 
 }

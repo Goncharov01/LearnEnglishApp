@@ -9,17 +9,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.learnenglishapp.db.WordModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.RecyclerViewHolder> {
 
     Context context;
-    List<DataModel> dataModels = new ArrayList<>();
+    List<WordModel> wordModels = new ArrayList<>();
 
-    public AdapterRecycler(Context context, List<DataModel> dataModels) {
+    public AdapterRecycler(Context context, List<WordModel> wordModels) {
         this.context = context;
-        this.dataModels = dataModels;
+        this.wordModels = wordModels;
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder{
@@ -45,17 +47,25 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewHolder holder, int position) {
-        if(dataModels.size() != 0) {
-            DataModel dataModel = dataModels.get(position);
-            holder.ruView.setText(dataModel.getRu());
-            holder.engView.setText(dataModel.getRu());
+        if(wordModels.size() != 0) {
+            WordModel wordModel = wordModels.get(position);
+            holder.ruView.setText(wordModel.getRuWord());
+            holder.engView.setText(wordModel.getEngWord());
+//            holder.itemView.setTag(wordModel);
         }
 
     }
 
     @Override
     public int getItemCount() {
-        return dataModels.size();
+        return wordModels.size();
+    }
+
+    public void addItemList(List<WordModel> wordModels){
+        this.wordModels.clear();
+        this.wordModels.addAll(wordModels);
+        notifyDataSetChanged();
+
     }
 
 
