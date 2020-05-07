@@ -1,6 +1,7 @@
 package com.example.learnenglishapp.db;
 
 import android.app.Application;
+import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -22,6 +23,27 @@ public class WordListViewModel extends AndroidViewModel {
 
     public LiveData<List<WordModel>> getWordList(){
         return wordLiveData;
+    }
+
+    public void deleteItem(WordModel wordModel){
+        new deleteAsyncTask(appDatabase).execute(wordModel);
+
+    }
+
+    public class deleteAsyncTask extends AsyncTask<WordModel,Void,Void>{
+
+        private AppDatabase ab;
+
+        public deleteAsyncTask(AppDatabase appDatabase){
+            ab = appDatabase;
+        }
+
+
+        @Override
+        protected Void doInBackground(final WordModel... wordModels) {
+            ab.wordModelDao().deleteWord(wordModels[0]);
+            return null;
+        }
     }
 
 }

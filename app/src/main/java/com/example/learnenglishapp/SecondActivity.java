@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,9 +18,7 @@ public class SecondActivity extends AppCompatActivity {
 
     public EditText ruWord;
     public EditText engWord;
-    Button saveButton;
     private AddWordViewModel addWordViewModel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,26 +27,24 @@ public class SecondActivity extends AppCompatActivity {
 
         ruWord = findViewById(R.id.editText);
         engWord = findViewById(R.id.editText2);
-        saveButton = findViewById(R.id.button);
+        Button saveButton = findViewById(R.id.button);
 
         addWordViewModel = ViewModelProviders.of(this).get(AddWordViewModel.class);
 
 
-
-
-        saveButton.setOnClickListener(
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(ruWord.getText() == null || engWord.getText() ==null)
-                            Toast.makeText(SecondActivity.this,"Missing field", Toast.LENGTH_SHORT).show();
-                        else {
-                           addWordViewModel.addWord(new WordModel(ruWord.getText().toString(),engWord.getText().toString()));
-                           finish();
-                        }
-                    }
-                });
-
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Editable ruEditText = ruWord.getText();
+                final Editable engEditText = engWord.getText();
+                if(ruEditText == null || ruEditText.toString().trim().equals("") || engEditText == null || engEditText.toString().trim().equals(""))
+                    Toast.makeText(SecondActivity.this,"Missing fields",Toast.LENGTH_LONG).show();
+                else {
+                    addWordViewModel.addWord(new WordModel(ruWord.getText().toString(),engWord.getText().toString()));
+                    finish();
+                }
+            }
+        });
 
     }
 }

@@ -16,12 +16,12 @@ import java.util.List;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.RecyclerViewHolder> {
 
-    Context context;
-    List<WordModel> wordModels = new ArrayList<>();
+    List<WordModel> wordModels;
+    View.OnLongClickListener longClickListener;
 
-    public AdapterRecycler(Context context, List<WordModel> wordModels) {
-        this.context = context;
+    public AdapterRecycler(List<WordModel> wordModels,View.OnLongClickListener longClickListener) {
         this.wordModels = wordModels;
+        this.longClickListener = longClickListener;
     }
 
     class RecyclerViewHolder extends RecyclerView.ViewHolder{
@@ -39,7 +39,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Recycl
     @NonNull
     @Override
     public RecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context)
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.task_list_item,parent,false);
 
         return new RecyclerViewHolder(view);
@@ -51,7 +51,8 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Recycl
             WordModel wordModel = wordModels.get(position);
             holder.ruView.setText(wordModel.getRuWord());
             holder.engView.setText(wordModel.getEngWord());
-//            holder.itemView.setTag(wordModel);
+            holder.itemView.setTag(wordModel);
+            holder.itemView.setOnLongClickListener(longClickListener);
         }
 
     }
@@ -62,8 +63,8 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.Recycl
     }
 
     public void addItemList(List<WordModel> wordModels){
-        this.wordModels.clear();
-        this.wordModels.addAll(wordModels);
+        this.wordModels = wordModels;
+//        this.wordModels.addAll(wordModels);
         notifyDataSetChanged();
 
     }
